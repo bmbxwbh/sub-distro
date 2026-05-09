@@ -8,7 +8,7 @@
 - **代开订阅** — 管理员可为任意用户直接创建订阅，自定义天数和流量
 - **用户中心** — 浏览套餐、购买订阅、查看订阅链接、QR 码、多格式导出、订单历史
 - **订阅分发** — 根据 User-Agent 自动返回对应格式（Clash YAML / Sing-box JSON / Base64）
-- **优惠码系统** — 支持百分比/固定金额折扣，单个创建或批量生成，使用次数限制
+- **优惠码系统** — 支持百分比/固定金额折扣，单个创建或批量生成（最多 200/次），使用次数限制
 - **支付对接** — 易支付 (EPay) 集成，支持支付宝/微信/QQ 钱包
 - **订单系统** — 完整的订单流水，记录原价、折扣、实付、优惠码
 - **节点监控** — 实时查看 3x-ui 服务器状态、Inbound 列表、客户端流量统计
@@ -21,10 +21,67 @@
 | 后端 | Node.js + Express |
 | 数据库 | SQLite (better-sqlite3) |
 | 模板引擎 | EJS |
-| 样式 | 自定义 CSS (Miuix/HyperOS 设计语言，响应式) |
+| 样式 | 自定义 CSS (Miuix/HyperOS 设计语言，全端响应式) |
 | 认证 | express-session + bcryptjs |
 | QR 码 | qrcode |
 | 支付 | 易支付 (EPay) v1.1 协议 |
+
+## 部署
+
+### 一键部署（推荐）
+
+支持 Ubuntu / Debian / CentOS / RHEL / Rocky / Fedora / Alpine：
+
+```bash
+# 一键安装（自动安装 Node.js、配置 systemd、生成 .env）
+curl -fsSL https://raw.githubusercontent.com/bmbxwbh/sub-distro/main/deploy.sh | sudo bash
+```
+
+部署完成后访问 `http://你的IP:3000`，默认管理员 `admin / admin123`。
+
+**管理命令：**
+
+```bash
+# 更新到最新版
+sudo bash /opt/sub-distro/deploy.sh update
+
+# 卸载
+sudo bash /opt/sub-distro/deploy.sh uninstall
+
+# 服务管理
+systemctl status sub-distro    # 查看状态
+systemctl restart sub-distro   # 重启
+systemctl stop sub-distro      # 停止
+journalctl -u sub-distro -f    # 查看日志
+```
+
+### 手动部署
+
+```bash
+# 1. 克隆
+git clone https://github.com/bmbxwbh/sub-distro.git
+cd sub-distro
+
+# 2. 安装依赖
+npm install
+
+# 3. 配置
+cp .env.example .env
+# 编辑 .env，填入你的 3x-ui 面板地址、密码、易支付配置
+
+# 4. 启动
+npm run dev
+
+# 5. 访问 http://localhost:3000
+```
+
+### 部署后配置
+
+1. 访问 `/admin` 进入管理后台
+2. 前往 `/admin/xui` 填入 3x-ui 面板地址和凭据，点击「测试连接」
+3. 前往 `/admin/plans` 创建套餐（绑定 Inbound ID）
+4. 配置 `.env` 中的易支付信息（`EPAY_API_URL`、`EPAY_PID`、`EPAY_KEY`）
+5. 用户注册后即可浏览套餐、支付购买、获取订阅链接
 
 ## 项目结构
 
@@ -42,9 +99,9 @@ sub-distro/
 │   │   ├── order.js           # 订单 CRUD，折扣记录
 │   │   └── coupon.js          # 优惠码 CRUD，验证，折扣计算
 │   ├── routes/
-│   │   ├── auth.js            # POST /auth/login, /auth/register, GET /auth/logout
-│   │   ├── admin.js           # 管理后台全部路由（含代开订阅、节点监控）
-│   │   ├── user.js            # 用户中心全部路由
+│   │   ├── auth.js            # 登录/注册/退出
+│   │   ├── admin.js           # 管理后台（含代开订阅、节点监控）
+│   │   ├── user.js            # 用户中心
 │   │   ├── sub.js             # 订阅分发（核心，对外暴露）
 │   │   └── payment.js         # 支付路由（易支付对接）
 │   └── services/
@@ -52,18 +109,13 @@ sub-distro/
 │       ├── sub.js             # 订阅创建 + 节点解析 + 多格式导出
 │       └── payment.js         # 易支付签名/验签
 ├── views/                     # EJS 模板（17 个）
-│   ├── partials/nav.ejs       # 响应式导航栏（汉堡菜单）
-│   ├── auth/                  # login.ejs, register.ejs
-│   ├── admin/                 # dashboard, users, plans, subscriptions,
-│   │                          # create_sub, orders, coupons, nodes, xui
-│   ├── user/                  # dashboard, plans, subscription, orders
-│   ├── index.ejs              # 首页
-│   └── error.ejs              # 错误页
-├── public/css/miuix.css       # Miuix 设计系统样式（1300+ 行，全端响应式）
+├── public/css/miuix.css       # Miuix 设计系统（1300+ 行）
+├── deploy.sh                  # 一键部署脚本
 ├── data/                      # SQLite 数据库文件（gitignore）
 ├── .env.example               # 环境变量模板
 ├── package.json
-└── README.md
+├── README.md
+└── update.md                  # 更新日志
 ```
 
 ## 数据库表
@@ -153,28 +205,6 @@ sub-distro/
 
 套餐绑定 inbound ID 后，用户购买时自动在对应 inbound 创建客户端。
 
-## 快速开始
-
-```bash
-# 1. 克隆
-git clone https://github.com/bmbxwbh/sub-distro.git
-cd sub-distro
-
-# 2. 安装依赖
-npm install
-
-# 3. 配置
-cp .env.example .env
-# 编辑 .env，填入你的 3x-ui 面板地址、密码、易支付配置
-
-# 4. 启动
-npm run dev
-
-# 5. 访问
-# http://localhost:3000
-# 默认管理员: admin / admin123
-```
-
 ## 环境变量
 
 | 变量 | 说明 | 默认值 |
@@ -187,6 +217,13 @@ npm run dev
 | `EPAY_API_URL` | 易支付接口地址 | — |
 | `EPAY_PID` | 易支付商户 ID | — |
 | `EPAY_KEY` | 易支付商户密钥 | — |
+
+## 系统要求
+
+- **Node.js** >= 18
+- **操作系统**：Ubuntu / Debian / CentOS / RHEL / Rocky / Fedora / Alpine
+- **内存**：>= 128MB
+- **磁盘**：>= 200MB
 
 ## License
 
