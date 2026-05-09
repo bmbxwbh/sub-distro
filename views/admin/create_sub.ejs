@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>代开订阅 - sub-distro</title>
+  <link rel="stylesheet" href="/css/miuix.css">
+</head>
+<body>
+  <%- include('../partials/nav') %>
+
+  <div class="mi-container mi-container-md mi-page">
+    <h1 class="mi-page-title">代开订阅</h1>
+
+    <form method="POST" class="mi-form-card">
+      <div class="mi-input-group">
+        <label class="mi-label">选择用户</label>
+        <select name="user_id" class="mi-select" required>
+          <option value="">请选择用户</option>
+          <% users.forEach(u => { %>
+          <option value="<%= u.id %>"><%= u.username %> (ID: <%= u.id %><% if (u.email) { %>, <%= u.email %><% } %>)</option>
+          <% }) %>
+        </select>
+      </div>
+
+      <div class="mi-input-group">
+        <label class="mi-label">选择套餐</label>
+        <select name="plan_id" class="mi-select" required id="planSelect" onchange="updateInfo()">
+          <option value="">请选择套餐</option>
+          <% plans.forEach(p => { %>
+          <option value="<%= p.id %>" data-days="<%= p.duration_days %>" data-limit="<%= p.data_limit %>">
+            <%= p.name %> — ¥<%= p.price %> (<%= p.data_limit ? p.data_limit + 'GB' : '无限' %>, <%= p.duration_days %>天)
+          </option>
+          <% }) %>
+        </select>
+      </div>
+
+      <div class="mi-grid mi-grid-2">
+        <div class="mi-input-group">
+          <label class="mi-label">有效天数（默认套餐天数）</label>
+          <input type="number" name="duration_days" id="durationDays" value="30" min="1" class="mi-input">
+        </div>
+        <div class="mi-input-group">
+          <label class="mi-label">流量 GB（默认套餐流量，0 = 无限）</label>
+          <input type="number" name="data_limit" id="dataLimit" value="0" min="0" class="mi-input">
+        </div>
+      </div>
+
+      <div class="mi-form-footer mi-mt-4">
+        <button type="submit" class="mi-btn mi-btn-primary" onclick="return confirm('确认为该用户代开订阅？')">确认代开</button>
+        <a href="/admin" class="mi-btn mi-btn-secondary">取消</a>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    function updateInfo() {
+      var sel = document.getElementById('planSelect');
+      var opt = sel.options[sel.selectedIndex];
+      if (opt.value) {
+        document.getElementById('durationDays').value = opt.dataset.days || 30;
+        document.getElementById('dataLimit').value = opt.dataset.limit || 0;
+      }
+    }
+  </script>
+</body>
+</html>

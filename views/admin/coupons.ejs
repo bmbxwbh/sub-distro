@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>优惠码管理 - sub-distro</title>
+  <link rel="stylesheet" href="/css/miuix.css">
+</head>
+<body>
+  <%- include('../partials/nav') %>
+
+  <div class="mi-container mi-page">
+    <div class="mi-section-header">
+      <h1 class="mi-page-title" style="margin-bottom:0">优惠码管理</h1>
+    </div>
+
+    <!-- 创建单个优惠码 -->
+    <div class="mi-card mi-mb-6">
+      <div class="mi-card-body-lg">
+        <h2 class="text-headline mi-mb-4">创建优惠码</h2>
+        <form method="POST" action="/admin/coupons/create">
+          <div class="mi-grid mi-grid-2">
+            <div class="mi-input-group">
+              <label class="mi-label">优惠码</label>
+              <input type="text" name="code" required placeholder="如 SAVE20" class="mi-input"
+                style="text-transform: uppercase;">
+            </div>
+            <div class="mi-input-group">
+              <label class="mi-label">折扣类型</label>
+              <select name="discount_type" class="mi-select">
+                <option value="percent">百分比（%）</option>
+                <option value="fixed">固定金额（元）</option>
+              </select>
+            </div>
+          </div>
+          <div class="mi-grid mi-grid-2">
+            <div class="mi-input-group">
+              <label class="mi-label">折扣值</label>
+              <input type="number" name="discount_value" required min="0.01" step="0.01"
+                placeholder="百分比填 1-100，固定填金额" class="mi-input">
+            </div>
+            <div class="mi-input-group">
+              <label class="mi-label">使用次数限制（0 = 不限）</label>
+              <input type="number" name="max_uses" value="0" min="0" class="mi-input">
+            </div>
+          </div>
+          <button type="submit" class="mi-btn mi-btn-primary">创建</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- 批量生成 -->
+    <div class="mi-card mi-mb-6">
+      <div class="mi-card-body-lg">
+        <h2 class="text-headline mi-mb-4">批量生成</h2>
+        <form method="POST" action="/admin/coupons/bulk">
+          <div class="mi-grid mi-grid-2">
+            <div class="mi-input-group">
+              <label class="mi-label">前缀</label>
+              <input type="text" name="prefix" placeholder="如 VIP" class="mi-input" style="text-transform: uppercase;">
+            </div>
+            <div class="mi-input-group">
+              <label class="mi-label">数量（最多 200）</label>
+              <input type="number" name="count" value="10" min="1" max="200" required class="mi-input">
+            </div>
+          </div>
+          <div class="mi-grid mi-grid-3">
+            <div class="mi-input-group">
+              <label class="mi-label">折扣类型</label>
+              <select name="discount_type" class="mi-select">
+                <option value="percent">百分比（%）</option>
+                <option value="fixed">固定金额（元）</option>
+              </select>
+            </div>
+            <div class="mi-input-group">
+              <label class="mi-label">折扣值</label>
+              <input type="number" name="discount_value" required min="0.01" step="0.01" class="mi-input">
+            </div>
+            <div class="mi-input-group">
+              <label class="mi-label">使用次数限制（0 = 不限）</label>
+              <input type="number" name="max_uses" value="0" min="0" class="mi-input">
+            </div>
+          </div>
+          <button type="submit" class="mi-btn mi-btn-primary" onclick="return confirm('确认批量生成？')">批量生成</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- 优惠码列表 -->
+    <% if (coupons.length === 0) { %>
+    <div class="mi-card">
+      <div class="mi-empty">
+        <div class="mi-empty-icon">🏷️</div>
+        <p class="mi-empty-text">暂无优惠码</p>
+      </div>
+    </div>
+    <% } else { %>
+    <div class="mi-table-wrapper">
+      <table class="mi-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>优惠码</th>
+            <th>类型</th>
+            <th>折扣值</th>
+            <th>使用情况</th>
+            <th>状态</th>
+            <th>创建时间</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% coupons.forEach(c => { %>
+          <tr>
+            <td data-label="ID"><%= c.id %></td>
+            <td data-label="优惠码"><strong class="mono"><%= c.code %></strong></td>
+            <td data-label="类型"><%= c.discount_type === 'percent' ? '百分比' : '固定金额' %></td>
+            <td data-label="折扣值"><%= c.discount_type === 'percent' ? c.discount_value + '%' : '¥' + c.discount_value %></td>
+            <td data-label="使用情况">
+              <%= c.used_count %><% if (c.max_uses > 0) { %> / <%= c.max_uses %><% } else { %> / 不限<% } %>
+            </td>
+            <td data-label="状态">
+              <span class="mi-badge <%= c.enabled ? 'mi-badge-success' : 'mi-badge-neutral' %>">
+                <%= c.enabled ? '启用' : '禁用' %>
+              </span>
+            </td>
+            <td data-label="创建时间" class="mi-text-sm mi-text-muted"><%= c.created_at %></td>
+            <td data-label="操作">
+              <form method="POST" action="/admin/coupons/<%= c.id %>/toggle" class="mi-inline">
+                <button type="submit" class="mi-inline-action">
+                  <%= c.enabled ? '禁用' : '启用' %>
+                </button>
+              </form>
+              <form method="POST" action="/admin/coupons/<%= c.id %>/delete" class="mi-inline"
+                onsubmit="return confirm('确定删除优惠码 <%= c.code %>?')">
+                <button type="submit" class="mi-inline-action mi-inline-action-danger">删除</button>
+              </form>
+            </td>
+          </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+    <% } %>
+  </div>
+</body>
+</html>

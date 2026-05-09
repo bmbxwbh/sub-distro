@@ -9,16 +9,16 @@
 <body>
   <%- include('../partials/nav') %>
 
-  <div class="mi-container mi-container-sm mi-page" style="padding-top: 64px;">
+  <div class="mi-container mi-container-sm mi-page" style="padding-top: 32px;">
     <h1 class="mi-page-title mi-text-center">登录</h1>
     <form method="POST" class="mi-form-card">
       <div class="mi-input-group">
         <label class="mi-label">用户名</label>
-        <input type="text" name="username" required class="mi-input" placeholder="请输入用户名">
+        <input type="text" name="username" required class="mi-input" placeholder="请输入用户名" autocomplete="username">
       </div>
       <div class="mi-input-group">
         <label class="mi-label">密码</label>
-        <input type="password" name="password" required class="mi-input" placeholder="请输入密码">
+        <input type="password" name="password" required class="mi-input" placeholder="请输入密码" autocomplete="current-password">
       </div>
       <button type="submit" class="mi-btn mi-btn-primary mi-btn-block mi-mt-2">登录</button>
       <p class="mi-text-center mi-text-sm mi-text-muted mi-mt-4">

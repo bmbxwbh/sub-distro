@@ -7,6 +7,7 @@ const authRoutes = require('./routes/auth');
 const adminRoutes = require('./routes/admin');
 const userRoutes = require('./routes/user');
 const subRoutes = require('./routes/sub');
+const paymentRoutes = require('./routes/payment');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -39,6 +40,7 @@ app.use('/auth', authRoutes);
 app.use('/admin', adminRoutes);
 app.use('/user', userRoutes);
 app.use('/sub', subRoutes);
+app.use('/payment', paymentRoutes);
 
 // Landing page
 app.get('/', (req, res) => {

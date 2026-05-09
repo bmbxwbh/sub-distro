@@ -1,9 +1,13 @@
 <nav class="mi-nav">
   <div class="mi-nav-inner">
     <a href="/" class="mi-nav-brand">sub-distro</a>
-    <div class="mi-nav-links">
+    <button class="mi-nav-toggle" onclick="toggleNav()" aria-label="菜单">
+      <span></span><span></span><span></span>
+    </button>
+    <div class="mi-nav-links" id="navLinks">
       <% if (user) { %>
         <a href="/user" class="mi-nav-link">用户中心</a>
+        <a href="/user/orders" class="mi-nav-link">订单</a>
         <% if (user.role === 'admin') { %>
           <a href="/admin" class="mi-nav-link">管理后台</a>
         <% } %>
@@ -24,3 +28,19 @@
     </div>
   </div>
 <% } %>
+
+<script>
+  function toggleNav() {
+    var btn = document.querySelector('.mi-nav-toggle');
+    var links = document.getElementById('navLinks');
+    btn.classList.toggle('active');
+    links.classList.toggle('open');
+  }
+  // 点击链接后自动关闭菜单
+  document.querySelectorAll('.mi-nav-link').forEach(function(link) {
+    link.addEventListener('click', function() {
+      document.querySelector('.mi-nav-toggle').classList.remove('active');
+      document.getElementById('navLinks').classList.remove('open');
+    });
+  });
+</script>

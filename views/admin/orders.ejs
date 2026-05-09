@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>订单管理 - sub-distro</title>
+  <link rel="stylesheet" href="/css/miuix.css">
+</head>
+<body>
+  <%- include('../partials/nav') %>
+
+  <div class="mi-container mi-page">
+    <h1 class="mi-page-title">订单管理</h1>
+
+    <div class="mi-table-wrapper">
+      <table class="mi-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>订单号</th>
+            <th>用户</th>
+            <th>套餐</th>
+            <th>原价</th>
+            <th>优惠</th>
+            <th>实付</th>
+            <th>状态</th>
+            <th>交易号</th>
+            <th>创建时间</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% rows.forEach(o => { %>
+          <tr>
+            <td data-label="ID"><%= o.id %></td>
+            <td data-label="订单号" class="mono"><%= o.order_no %></td>
+            <td data-label="用户"><%= o.username || '-' %></td>
+            <td data-label="套餐"><%= o.plan_name || '-' %></td>
+            <td data-label="原价">¥<%= o.amount.toFixed(2) %></td>
+            <td data-label="优惠">
+              <% if (o.discount > 0) { %>
+                <span class="mi-text-error">-¥<%= o.discount.toFixed(2) %></span>
+                <% if (o.coupon_code) { %><br><span class="mi-text-xs mi-text-muted"><%= o.coupon_code %></span><% } %>
+              <% } else { %>
+                -
+              <% } %>
+            </td>
+            <td data-label="实付"><strong>¥<%= o.final_amount.toFixed(2) %></strong></td>
+            <td data-label="状态">
+              <span class="mi-badge <%= o.status === 'paid' ? 'mi-badge-success' : o.status === 'pending' ? 'mi-badge-warning' : 'mi-badge-error' %>">
+                <%= o.status === 'paid' ? '已支付' : o.status === 'pending' ? '待支付' : o.status === 'failed' ? '失败' : '已退款' %>
+              </span>
+            </td>
+            <td data-label="交易号" class="mono mi-text-sm"><%= o.trade_no || '-' %></td>
+            <td data-label="时间" class="mi-text-sm mi-text-muted"><%= o.created_at %></td>
+          </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+
+    <% if (pages > 1) { %>
+    <div class="mi-pagination">
+      <% for (let i = 1; i <= pages; i++) { %>
+      <a href="?page=<%= i %>" class="mi-page-btn <%= i === page ? 'mi-page-btn-active' : '' %>"><%= i %></a>
+      <% } %>
+    </div>
+    <% } %>
+  </div>
+</body>
+</html>

@@ -20,11 +20,11 @@
       </div>
       <div class="mi-input-group">
         <label class="mi-label">用户名</label>
-        <input type="text" name="username" value="<%= config ? config.username : '' %>" required class="mi-input">
+        <input type="text" name="username" value="<%= config ? config.username : '' %>" required class="mi-input" autocomplete="username">
       </div>
       <div class="mi-input-group">
         <label class="mi-label">密码</label>
-        <input type="password" name="password" value="<%= config ? config.password : '' %>" required class="mi-input">
+        <input type="password" name="password" value="<%= config ? config.password : '' %>" required class="mi-input" autocomplete="current-password">
       </div>
       <div class="mi-form-footer">
         <button type="submit" class="mi-btn mi-btn-primary">保存</button>

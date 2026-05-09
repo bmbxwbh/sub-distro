@@ -61,15 +61,15 @@ function initDB() {
       FOREIGN KEY (plan_id) REFERENCES plans(id)
     );
 
-    CREATE TABLE IF NOT EXISTS redeem_codes (
+    CREATE TABLE IF NOT EXISTS coupon_codes (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       code TEXT UNIQUE NOT NULL,
-      plan_id INTEGER NOT NULL,
-      used_by INTEGER,
-      used_at DATETIME,
-      expires_at DATETIME,
-      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-      FOREIGN KEY (plan_id) REFERENCES plans(id)
+      discount_type TEXT NOT NULL CHECK(discount_type IN ('percent','fixed')),
+      discount_value REAL NOT NULL,
+      max_uses INTEGER DEFAULT 0,
+      used_count INTEGER DEFAULT 0,
+      enabled INTEGER DEFAULT 1,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
     );
 
     CREATE TABLE IF NOT EXISTS xui_config (
@@ -79,6 +79,24 @@ function initDB() {
       password TEXT NOT NULL,
       session_cookie TEXT,
       cookie_updated_at DATETIME
+    );
+
+    CREATE TABLE IF NOT EXISTS orders (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      order_no TEXT UNIQUE NOT NULL,
+      user_id INTEGER NOT NULL,
+      plan_id INTEGER NOT NULL,
+      amount REAL NOT NULL,
+      discount REAL DEFAULT 0,
+      final_amount REAL NOT NULL,
+      coupon_code TEXT,
+      status TEXT DEFAULT 'pending' CHECK(status IN ('pending','paid','failed','refunded')),
+      payment_method TEXT,
+      trade_no TEXT,
+      paid_at DATETIME,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (user_id) REFERENCES users(id),
+      FOREIGN KEY (plan_id) REFERENCES plans(id)
     );
   `);
 

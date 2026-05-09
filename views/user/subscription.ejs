@@ -112,9 +112,12 @@
 
   <script>
     function copy() {
-      const input = document.getElementById('subUrl');
-      navigator.clipboard.writeText(input.value);
+      var input = document.getElementById('subUrl');
       input.select();
+      input.setSelectionRange(0, 99999);
+      navigator.clipboard.writeText(input.value).catch(function() {
+        document.execCommand('copy');
+      });
     }
   </script>
 </body>

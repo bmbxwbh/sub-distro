@@ -28,19 +28,19 @@
         <tbody>
           <% rows.forEach(s => { %>
           <tr>
-            <td><%= s.id %></td>
-            <td><%= s.username %></td>
-            <td><%= s.plan_name || '-' %></td>
-            <td class="mono"><%= s.email %></td>
-            <td>
+            <td data-label="ID"><%= s.id %></td>
+            <td data-label="用户"><%= s.username %></td>
+            <td data-label="套餐"><%= s.plan_name || '-' %></td>
+            <td data-label="Email" class="mono"><%= s.email %></td>
+            <td data-label="流量">
               <% if (s.data_limit) { %>
                 <%= s.data_used %> / <%= s.data_limit %> GB
               <% } else { %>
                 无限
               <% } %>
             </td>
-            <td class="mi-text-sm"><%= s.expires_at %></td>
-            <td>
+            <td data-label="到期" class="mi-text-sm"><%= s.expires_at %></td>
+            <td data-label="状态">
               <span class="mi-badge <%= s.enabled ? 'mi-badge-success' : 'mi-badge-error' %>">
                 <%= s.enabled ? '有效' : '禁用' %>
               </span>

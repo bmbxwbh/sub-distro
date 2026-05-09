@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>节点监控 - sub-distro</title>
+  <link rel="stylesheet" href="/css/miuix.css">
+</head>
+<body>
+  <%- include('../partials/nav') %>
+
+  <div class="mi-container mi-page">
+    <div class="mi-section-header">
+      <h1 class="mi-page-title" style="margin-bottom:0">节点监控</h1>
+      <a href="/admin/nodes/refresh" class="mi-btn mi-btn-ghost mi-btn-sm">🔄 刷新</a>
+    </div>
+
+    <% if (error) { %>
+    <div class="mi-card mi-mb-4">
+      <div class="mi-card-body-lg">
+        <div class="mi-flash-inner mi-flash-error"><%= error %></div>
+      </div>
+    </div>
+    <% } %>
+
+    <!-- Server Status -->
+    <% if (serverStatus) { %>
+    <div class="mi-stats mi-mb-6">
+      <div class="mi-stat-card">
+        <div class="mi-stat-label">CPU</div>
+        <div class="mi-stat-value mi-stat-primary"><%= serverStatus.cpu %>%</div>
+      </div>
+      <div class="mi-stat-card">
+        <div class="mi-stat-label">内存</div>
+        <div class="mi-stat-value mi-stat-success"><%= serverStatus.mem ? (serverStatus.mem / 1024 / 1024).toFixed(0) + 'MB' : 'N/A' %></div>
+      </div>
+      <div class="mi-stat-card">
+        <div class="mi-stat-label">运行时间</div>
+        <div class="mi-stat-value mi-stat-purple"><%= serverStatus.uptime || 'N/A' %></div>
+      </div>
+      <div class="mi-stat-card">
+        <div class="mi-stat-label">Xray 状态</div>
+        <div class="mi-stat-value" style="color: <%= serverStatus.xray_state === 'running' ? '#2E7D32' : '#C62828' %>">
+          <%= serverStatus.xray_state || 'N/A' %>
+        </div>
+      </div>
+    </div>
+    <% } %>
+
+    <!-- Inbounds -->
+    <% if (inbounds.length === 0) { %>
+    <div class="mi-card">
+      <div class="mi-empty">
+        <div class="mi-empty-icon">📡</div>
+        <p class="mi-empty-text"><%= error ? '无法连接到 3x-ui 面板' : '暂无 Inbound 节点' %></p>
+        <a href="/admin/xui" class="mi-btn mi-btn-primary">配置 3x-ui</a>
+      </div>
+    </div>
+    <% } else { %>
+    <div class="mi-grid mi-grid-2">
+      <% inbounds.forEach(ib => { %>
+      <div class="mi-card">
+        <div class="mi-card-body-lg">
+          <div class="mi-flex mi-justify-between mi-items-center mi-mb-3">
+            <h3 class="text-headline">#<%= ib.id %> <%= ib.remark %></h3>
+            <span class="mi-badge mi-badge-info"><%= ib.protocol %></span>
+          </div>
+
+          <div class="mi-info-grid" style="margin-bottom:16px;">
+            <div class="mi-info-item">
+              <span class="mi-info-label">端口</span>
+              <span class="mi-info-value"><%= ib.port %></span>
+            </div>
+            <div class="mi-info-item">
+              <span class="mi-info-label">监听</span>
+              <span class="mi-info-value"><%= ib.listen || '0.0.0.0' %></span>
+            </div>
+            <div class="mi-info-item">
+              <span class="mi-info-label">启用</span>
+              <span class="mi-info-value">
+                <span class="mi-badge <%= ib.enable ? 'mi-badge-success' : 'mi-badge-error' %>">
+                  <%= ib.enable ? '是' : '否' %>
+                </span>
+              </span>
+            </div>
+            <div class="mi-info-item">
+              <span class="mi-info-label">客户端数</span>
+              <span class="mi-info-value"><%= ib.clientStats ? ib.clientStats.length : 0 %></span>
+            </div>
+          </div>
+
+          <!-- Traffic Summary -->
+          <% if (ib.clientStats && ib.clientStats.length > 0) { %>
+          <div class="mi-node" style="flex-direction:column; align-items:stretch; gap:8px; background:var(--mi-surface);">
+            <div class="mi-flex mi-justify-between">
+              <span class="mi-text-sm mi-text-muted">总上行</span>
+              <span class="mi-text-sm"><strong><%= formatBytes(ib.clientStats.reduce((s,c) => s + (c.up||0), 0)) %></strong></span>
+            </div>
+            <div class="mi-flex mi-justify-between">
+              <span class="mi-text-sm mi-text-muted">总下行</span>
+              <span class="mi-text-sm"><strong><%= formatBytes(ib.clientStats.reduce((s,c) => s + (c.down||0), 0)) %></strong></span>
+            </div>
+          </div>
+
+          <!-- Client List (collapsible) -->
+          <details style="margin-top:12px;">
+            <summary class="mi-text-sm" style="cursor:pointer; color:var(--mi-primary); padding:4px 0;">
+              查看客户端列表 (<%= ib.clientStats.length %>)
+            </summary>
+            <div style="margin-top:8px;">
+              <% ib.clientStats.forEach(c => { %>
+              <div class="mi-node" style="margin-bottom:6px;">
+                <div style="flex:1; min-width:0;">
+                  <div class="mi-flex mi-justify-between mi-items-center">
+                    <span class="mi-node-name" style="font-size:12px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;"><%= c.email %></span>
+                    <span class="mi-badge <%= c.enable ? 'mi-badge-success' : 'mi-badge-error' %>" style="flex-shrink:0;">
+                      <%= c.enable ? '在线' : '禁用' %>
+                    </span>
+                  </div>
+                  <div class="mi-flex mi-justify-between mi-mt-2">
+                    <span class="mi-text-xs mi-text-muted">↑ <%= formatBytes(c.up || 0) %> ↓ <%= formatBytes(c.down || 0) %></span>
+                    <% if (c.total > 0) { %>
+                    <span class="mi-text-xs mi-text-muted"><%= formatBytes(c.up + c.down) %> / <%= formatBytes(c.total) %></span>
+                    <% } %>
+                  </div>
+                  <% if (c.expiryTime > 0) { %>
+                  <div class="mi-text-xs mi-text-muted mi-mt-2">到期: <%= new Date(c.expiryTime).toLocaleDateString('zh-CN') %></div>
+                  <% } %>
+                </div>
+              </div>
+              <% }) %>
+            </div>
+          </details>
+          <% } %>
+        </div>
+      </div>
+      <% }) %>
+    </div>
+    <% } %>
+
+    <a href="/admin" class="mi-btn mi-btn-text mi-mt-4">← 返回管理后台</a>
+  </div>
+</body>
+</html>

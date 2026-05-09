@@ -30,16 +30,16 @@
         <tbody>
           <% plans.forEach(plan => { %>
           <tr>
-            <td><strong><%= plan.name %></strong></td>
-            <td><%= plan.data_limit ? plan.data_limit + ' GB' : '无限' %></td>
-            <td><%= plan.duration_days %> 天</td>
-            <td>¥<%= plan.price %></td>
-            <td>
+            <td data-label="名称"><strong><%= plan.name %></strong></td>
+            <td data-label="流量"><%= plan.data_limit ? plan.data_limit + ' GB' : '无限' %></td>
+            <td data-label="天数"><%= plan.duration_days %> 天</td>
+            <td data-label="价格">¥<%= plan.price %></td>
+            <td data-label="状态">
               <span class="mi-badge <%= plan.enabled ? 'mi-badge-success' : 'mi-badge-neutral' %>">
                 <%= plan.enabled ? '启用' : '禁用' %>
               </span>
             </td>
-            <td>
+            <td data-label="操作">
               <a href="/admin/plans/<%= plan.id %>/edit" class="mi-inline-action">编辑</a>
               <form method="POST" action="/admin/plans/<%= plan.id %>/delete" class="mi-inline"
                 onsubmit="return confirm('确定删除?')">

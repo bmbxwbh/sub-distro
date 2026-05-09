@@ -28,21 +28,21 @@
         <tbody>
           <% rows.forEach(u => { %>
           <tr>
-            <td><%= u.id %></td>
-            <td><strong><%= u.username %></strong></td>
-            <td class="mi-text-muted"><%= u.email || '-' %></td>
-            <td>
+            <td data-label="ID"><%= u.id %></td>
+            <td data-label="用户名"><strong><%= u.username %></strong></td>
+            <td data-label="邮箱" class="mi-text-muted"><%= u.email || '-' %></td>
+            <td data-label="角色">
               <span class="mi-badge <%= u.role === 'admin' ? 'mi-badge-admin' : 'mi-badge-info' %>">
                 <%= u.role %>
               </span>
             </td>
-            <td>
+            <td data-label="状态">
               <span class="mi-badge <%= u.status === 'active' ? 'mi-badge-success' : 'mi-badge-neutral' %>">
                 <%= u.status %>
               </span>
             </td>
-            <td class="mi-text-sm mi-text-muted"><%= u.created_at %></td>
-            <td>
+            <td data-label="注册时间" class="mi-text-sm mi-text-muted"><%= u.created_at %></td>
+            <td data-label="操作">
               <% if (u.role !== 'admin') { %>
               <form method="POST" action="/admin/users/<%= u.id %>/ban" class="mi-inline">
                 <button type="submit" class="mi-inline-action">封禁</button>
