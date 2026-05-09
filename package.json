@@ -1,0 +1,22 @@
+{
+  "name": "sub-distro",
+  "version": "0.1.0",
+  "description": "3x-ui subscription link distribution platform",
+  "main": "src/app.js",
+  "scripts": {
+    "start": "node src/app.js",
+    "dev": "node --watch src/app.js"
+  },
+  "keywords": ["3x-ui", "subscription", "proxy"],
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.21.0",
+    "better-sqlite3": "^11.0.0",
+    "express-session": "^1.18.0",
+    "bcryptjs": "^2.4.3",
+    "dotenv": "^16.4.0",
+    "ejs": "^3.1.10",
+    "qrcode": "^1.5.4",
+    "uuid": "^10.0.0"
+  }
+}

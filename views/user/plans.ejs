@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>套餐列表 - sub-distro</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 min-h-screen">
+  <%- include('../partials/nav') %>
+
+  <div class="max-w-4xl mx-auto px-4 py-8">
+    <h1 class="text-2xl font-bold mb-6">选择套餐</h1>
+
+    <% if (plans.length === 0) { %>
+    <div class="bg-white rounded-lg shadow p-10 text-center">
+      <p class="text-gray-500">暂无可用套餐</p>
+    </div>
+    <% } else { %>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <% plans.forEach(plan => { %>
+      <div class="bg-white rounded-lg shadow p-6 flex flex-col">
+        <h3 class="text-xl font-bold"><%= plan.name %></h3>
+        <p class="text-gray-500 mt-2 flex-1"><%= plan.description || '' %></p>
+        <div class="mt-4 space-y-1 text-sm">
+          <div class="flex justify-between">
+            <span class="text-gray-500">流量</span>
+            <span class="font-medium"><%= plan.data_limit ? plan.data_limit + ' GB' : '无限' %></span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-gray-500">有效期</span>
+            <span class="font-medium"><%= plan.duration_days %> 天</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-gray-500">设备数</span>
+            <span class="font-medium"><%= plan.max_ips %></span>
+          </div>
+        </div>
+        <div class="mt-4 flex justify-between items-center">
+          <span class="text-2xl font-bold text-blue-600">¥<%= plan.price %></span>
+          <form method="POST" action="/user/subscribe/<%= plan.id %>"
+            onsubmit="return confirm('确认订阅 <%= plan.name %>？')">
+            <button type="submit" class="bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700">订阅</button>
+          </form>
+        </div>
+      </div>
+      <% }) %>
+    </div>
+    <% } %>
+  </div>
+</body>
+</html>
