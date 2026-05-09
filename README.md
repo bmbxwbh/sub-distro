@@ -37,7 +37,7 @@
 curl -fsSL https://raw.githubusercontent.com/bmbxwbh/sub-distro/main/deploy.sh | sudo bash
 ```
 
-部署完成后访问 `http://你的IP:3000`，默认管理员 `admin / admin123`。
+部署完成后访问 `http://你的IP:14826`，默认管理员 `admin / admin123`。
 
 **管理命令：**
 
@@ -72,7 +72,7 @@ cp .env.example .env
 # 4. 启动
 npm run dev
 
-# 5. 访问 http://localhost:3000
+# 5. 访问 http://localhost:14826
 ```
 
 ### 部署后配置
@@ -209,11 +209,11 @@ sub-distro/
 
 | 变量 | 说明 | 默认值 |
 |---|---|---|
-| `PORT` | 监听端口 | `3000` |
+| `PORT` | 监听端口 | `14826` |
 | `HOST` | 监听地址 | `0.0.0.0` |
 | `DB_PATH` | SQLite 文件路径 | `./data/sub-distro.db` |
 | `SESSION_SECRET` | session 密钥 | `change-me` |
-| `SUB_BASE_URL` | 订阅公开域名 | `http://localhost:3000` |
+| `SUB_BASE_URL` | 订阅公开域名 | `http://localhost:14826` |
 | `EPAY_API_URL` | 易支付接口地址 | — |
 | `EPAY_PID` | 易支付商户 ID | — |
 | `EPAY_KEY` | 易支付商户密钥 | — |

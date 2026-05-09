@@ -155,7 +155,7 @@ DB_PATH=./data/sub-distro.db
 SESSION_SECRET=${SESSION_SECRET}
 
 # Subscription base URL
-SUB_BASE_URL=http://${SERVER_IP}:3000
+SUB_BASE_URL=http://${SERVER_IP}:14826
 
 # EPay (易支付) - 请填入你的易支付信息
 EPAY_API_URL=
@@ -211,11 +211,11 @@ start_service() {
 setup_firewall() {
   if command -v ufw &>/dev/null; then
     info "配置防火墙 (ufw)..."
-    ufw allow 3000/tcp comment "sub-distro" 2>/dev/null || true
+    ufw allow 14826/tcp comment "sub-distro" 2>/dev/null || true
     ok "防火墙规则已添加"
   elif command -v firewall-cmd &>/dev/null; then
     info "配置防火墙 (firewalld)..."
-    firewall-cmd --permanent --add-port=3000/tcp 2>/dev/null || true
+    firewall-cmd --permanent --add-port=14826/tcp 2>/dev/null || true
     firewall-cmd --reload 2>/dev/null || true
     ok "防火墙规则已添加"
   fi
@@ -230,7 +230,7 @@ print_summary() {
   echo -e "${GREEN}  ✅ sub-distro 部署完成!${NC}"
   echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
   echo ""
-  echo -e "  ${BLUE}访问地址:${NC}  http://${SERVER_IP}:3000"
+  echo -e "  ${BLUE}访问地址:${NC}  http://${SERVER_IP}:14826"
   echo -e "  ${BLUE}管理员:${NC}    admin / admin123"
   echo -e "  ${BLUE}安装目录:${NC}  ${INSTALL_DIR}"
   echo -e "  ${BLUE}配置文件:${NC}  ${INSTALL_DIR}/.env"

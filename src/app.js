@@ -10,7 +10,7 @@ const subRoutes = require('./routes/sub');
 const paymentRoutes = require('./routes/payment');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 14826;
 
 // View engine
 app.set('view engine', 'ejs');
