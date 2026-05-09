@@ -4,46 +4,46 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>套餐管理 - sub-distro</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="/css/miuix.css">
 </head>
-<body class="bg-gray-50 min-h-screen">
+<body>
   <%- include('../partials/nav') %>
 
-  <div class="max-w-6xl mx-auto px-4 py-8">
-    <div class="flex justify-between items-center mb-6">
-      <h1 class="text-2xl font-bold">套餐管理</h1>
-      <a href="/admin/plans/new" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">新建套餐</a>
+  <div class="mi-container mi-page">
+    <div class="mi-section-header">
+      <h1 class="mi-page-title" style="margin-bottom:0">套餐管理</h1>
+      <a href="/admin/plans/new" class="mi-btn mi-btn-primary mi-btn-sm">新建套餐</a>
     </div>
 
-    <div class="bg-white rounded-lg shadow overflow-hidden">
-      <table class="w-full">
-        <thead class="bg-gray-50">
+    <div class="mi-table-wrapper">
+      <table class="mi-table">
+        <thead>
           <tr>
-            <th class="px-4 py-3 text-left text-sm font-medium text-gray-500">名称</th>
-            <th class="px-4 py-3 text-left text-sm font-medium text-gray-500">流量</th>
-            <th class="px-4 py-3 text-left text-sm font-medium text-gray-500">天数</th>
-            <th class="px-4 py-3 text-left text-sm font-medium text-gray-500">价格</th>
-            <th class="px-4 py-3 text-left text-sm font-medium text-gray-500">状态</th>
-            <th class="px-4 py-3 text-left text-sm font-medium text-gray-500">操作</th>
+            <th>名称</th>
+            <th>流量</th>
+            <th>天数</th>
+            <th>价格</th>
+            <th>状态</th>
+            <th>操作</th>
           </tr>
         </thead>
-        <tbody class="divide-y">
+        <tbody>
           <% plans.forEach(plan => { %>
-          <tr class="hover:bg-gray-50">
-            <td class="px-4 py-3"><%= plan.name %></td>
-            <td class="px-4 py-3"><%= plan.data_limit ? plan.data_limit + ' GB' : '无限' %></td>
-            <td class="px-4 py-3"><%= plan.duration_days %> 天</td>
-            <td class="px-4 py-3">¥<%= plan.price %></td>
-            <td class="px-4 py-3">
-              <span class="px-2 py-1 text-xs rounded-full <%= plan.enabled ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-500' %>">
+          <tr>
+            <td><strong><%= plan.name %></strong></td>
+            <td><%= plan.data_limit ? plan.data_limit + ' GB' : '无限' %></td>
+            <td><%= plan.duration_days %> 天</td>
+            <td>¥<%= plan.price %></td>
+            <td>
+              <span class="mi-badge <%= plan.enabled ? 'mi-badge-success' : 'mi-badge-neutral' %>">
                 <%= plan.enabled ? '启用' : '禁用' %>
               </span>
             </td>
-            <td class="px-4 py-3">
-              <a href="/admin/plans/<%= plan.id %>/edit" class="text-blue-600 hover:underline text-sm mr-2">编辑</a>
-              <form method="POST" action="/admin/plans/<%= plan.id %>/delete" class="inline"
+            <td>
+              <a href="/admin/plans/<%= plan.id %>/edit" class="mi-inline-action">编辑</a>
+              <form method="POST" action="/admin/plans/<%= plan.id %>/delete" class="mi-inline"
                 onsubmit="return confirm('确定删除?')">
-                <button type="submit" class="text-red-600 hover:underline text-sm">删除</button>
+                <button type="submit" class="mi-inline-action mi-inline-action-danger">删除</button>
               </form>
             </td>
           </tr>

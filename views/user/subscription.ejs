@@ -4,88 +4,110 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>订阅详情 - sub-distro</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="/css/miuix.css">
 </head>
-<body class="bg-gray-50 min-h-screen">
+<body>
   <%- include('../partials/nav') %>
 
-  <div class="max-w-2xl mx-auto px-4 py-8">
-    <h1 class="text-2xl font-bold mb-6">订阅详情</h1>
+  <div class="mi-container mi-container-md mi-page">
+    <h1 class="mi-page-title">订阅详情</h1>
 
     <!-- Info Card -->
-    <div class="bg-white rounded-lg shadow p-6 mb-6">
-      <div class="flex justify-between items-start mb-4">
-        <h2 class="text-lg font-semibold"><%= sub.plan_name || '订阅' %></h2>
-        <span class="px-3 py-1 text-sm rounded-full
-          <%= sub.enabled ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' %>">
-          <%= sub.enabled ? '有效' : '已禁用' %>
-        </span>
-      </div>
-      <div class="grid grid-cols-2 gap-4 text-sm">
-        <div><span class="text-gray-500">Email:</span> <span class="font-mono"><%= sub.email %></span></div>
-        <div><span class="text-gray-500">UUID:</span> <span class="font-mono text-xs"><%= sub.uuid %></span></div>
-        <div>
-          <span class="text-gray-500">流量:</span>
-          <% if (sub.data_limit) { %>
-            <%= sub.data_used %> / <%= sub.data_limit %> GB
-            <div class="w-full bg-gray-200 rounded-full h-2 mt-1">
-              <div class="bg-blue-600 h-2 rounded-full" style="width: <%= Math.min(100, (sub.data_used / sub.data_limit * 100)) %>%"></div>
-            </div>
-          <% } else { %>
-            无限
-          <% } %>
+    <div class="mi-card mi-mb-4">
+      <div class="mi-card-body-lg">
+        <div class="mi-flex mi-justify-between mi-items-center mi-mb-4">
+          <h2 class="text-title4"><%= sub.plan_name || '订阅' %></h2>
+          <span class="mi-badge <%= sub.enabled ? 'mi-badge-success' : 'mi-badge-error' %>">
+            <%= sub.enabled ? '有效' : '已禁用' %>
+          </span>
         </div>
-        <div><span class="text-gray-500">到期:</span> <%= sub.expires_at %></div>
+        <div class="mi-info-grid">
+          <div class="mi-info-item">
+            <span class="mi-info-label">Email</span>
+            <span class="mi-info-value mono"><%= sub.email %></span>
+          </div>
+          <div class="mi-info-item">
+            <span class="mi-info-label">UUID</span>
+            <span class="mi-info-value mono"><%= sub.uuid %></span>
+          </div>
+          <div class="mi-info-item">
+            <span class="mi-info-label">流量</span>
+            <span class="mi-info-value">
+              <% if (sub.data_limit) { %>
+                <%= sub.data_used %> / <%= sub.data_limit %> GB
+                <div class="mi-progress">
+                  <div class="mi-progress-bar" style="width: <%= Math.min(100, (sub.data_used / sub.data_limit * 100)) %>%"></div>
+                </div>
+              <% } else { %>
+                无限
+              <% } %>
+            </span>
+          </div>
+          <div class="mi-info-item">
+            <span class="mi-info-label">到期</span>
+            <span class="mi-info-value"><%= sub.expires_at %></span>
+          </div>
+        </div>
       </div>
     </div>
 
     <!-- Subscription Link -->
-    <div class="bg-white rounded-lg shadow p-6 mb-6">
-      <h3 class="font-semibold mb-3">订阅链接</h3>
-      <div class="flex gap-2">
-        <input type="text" value="<%= subUrl %>" readonly id="subUrl"
-          class="flex-1 bg-gray-50 border rounded-lg px-3 py-2 text-sm font-mono">
-        <button onclick="copy()" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 text-sm">复制</button>
+    <div class="mi-card mi-mb-4">
+      <div class="mi-card-body-lg">
+        <h3 class="text-headline mi-mb-3">订阅链接</h3>
+        <div class="mi-copy-group">
+          <input type="text" value="<%= subUrl %>" readonly id="subUrl" class="mi-copy-input">
+          <button onclick="copy()" class="mi-btn mi-btn-primary mi-btn-sm">复制</button>
+        </div>
+        <p class="mi-form-hint">在客户端中添加此订阅链接即可自动获取节点配置</p>
       </div>
-      <p class="text-xs text-gray-500 mt-2">在客户端中添加此订阅链接即可自动获取节点配置</p>
     </div>
 
     <!-- Format Links -->
-    <div class="bg-white rounded-lg shadow p-6 mb-6">
-      <h3 class="font-semibold mb-3">多格式订阅</h3>
-      <div class="space-y-2">
-        <a href="/sub/<%= sub.token %>/raw" target="_blank"
-          class="block text-blue-600 hover:underline text-sm">📄 Base64 (V2RayN / Shadowrocket)</a>
-        <a href="/sub/<%= sub.token %>/clash" target="_blank"
-          class="block text-blue-600 hover:underline text-sm">⚔️ Clash YAML</a>
-        <a href="/sub/<%= sub.token %>/singbox" target="_blank"
-          class="block text-blue-600 hover:underline text-sm">📦 Sing-box JSON</a>
+    <div class="mi-card mi-mb-4">
+      <div class="mi-card-body-lg">
+        <h3 class="text-headline mi-mb-3">多格式订阅</h3>
+        <div class="mi-link-list">
+          <a href="/sub/<%= sub.token %>/raw" target="_blank" class="mi-link-item">
+            <span class="mi-link-icon">📄</span> Base64（V2RayN / Shadowrocket）
+          </a>
+          <a href="/sub/<%= sub.token %>/clash" target="_blank" class="mi-link-item">
+            <span class="mi-link-icon">⚔️</span> Clash YAML
+          </a>
+          <a href="/sub/<%= sub.token %>/singbox" target="_blank" class="mi-link-item">
+            <span class="mi-link-icon">📦</span> Sing-box JSON
+          </a>
+        </div>
       </div>
     </div>
 
     <!-- QR Code -->
-    <div class="bg-white rounded-lg shadow p-6 mb-6 text-center">
-      <h3 class="font-semibold mb-3">扫码导入</h3>
-      <img src="/sub/<%= sub.token %>/qr" alt="QR Code" class="mx-auto" style="max-width: 250px">
-      <p class="text-xs text-gray-500 mt-2">使用支持扫码的客户端扫描此二维码</p>
+    <div class="mi-card mi-mb-4">
+      <div class="mi-card-body-lg mi-qr">
+        <h3 class="text-headline mi-mb-3">扫码导入</h3>
+        <img src="/sub/<%= sub.token %>/qr" alt="QR Code">
+        <p class="mi-form-hint">使用支持扫码的客户端扫描此二维码</p>
+      </div>
     </div>
 
     <!-- Nodes -->
     <% if (result && result.nodes && result.nodes.length > 0) { %>
-    <div class="bg-white rounded-lg shadow p-6">
-      <h3 class="font-semibold mb-3">可用节点 (<%= result.nodes.length %>)</h3>
-      <div class="space-y-2">
-        <% result.nodes.forEach(node => { %>
-        <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-          <span class="px-2 py-1 text-xs rounded bg-blue-100 text-blue-800"><%= node.protocol %></span>
-          <span class="font-medium"><%= node.name %></span>
+    <div class="mi-card mi-mb-4">
+      <div class="mi-card-body-lg">
+        <h3 class="text-headline mi-mb-3">可用节点（<%= result.nodes.length %>）</h3>
+        <div class="mi-flex mi-flex-col mi-gap-2">
+          <% result.nodes.forEach(node => { %>
+          <div class="mi-node">
+            <span class="mi-node-tag"><%= node.protocol %></span>
+            <span class="mi-node-name"><%= node.name %></span>
+          </div>
+          <% }) %>
         </div>
-        <% }) %>
       </div>
     </div>
     <% } %>
 
-    <a href="/user" class="inline-block mt-6 text-blue-600 hover:underline">← 返回我的订阅</a>
+    <a href="/user" class="mi-btn mi-btn-text mi-mt-4">← 返回我的订阅</a>
   </div>
 
   <script>

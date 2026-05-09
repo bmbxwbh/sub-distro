@@ -126,7 +126,7 @@ router.get('/xui', (req, res) => {
 router.post('/xui', (req, res) => {
   const { base_url, username, password } = req.body;
   XuiService.saveConfig({ base_url, username, password });
-  req.session.flash = { type: 'success', message: '3x-ui 配置已保存' });
+  req.session.flash = { type: 'success', message: '3x-ui 配置已保存' };
   res.redirect('/admin/xui');
 });
 

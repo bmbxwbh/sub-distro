@@ -1,4 +1,4 @@
-const { getDB } = require('./db');
+const { getDB } = require('../models/db');
 
 const XuiService = {
   getConfig() {

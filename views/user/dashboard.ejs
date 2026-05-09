@@ -4,47 +4,45 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>用户中心 - sub-distro</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="/css/miuix.css">
 </head>
-<body class="bg-gray-50 min-h-screen">
+<body>
   <%- include('../partials/nav') %>
 
-  <div class="max-w-4xl mx-auto px-4 py-8">
-    <h1 class="text-2xl font-bold mb-6">我的订阅</h1>
+  <div class="mi-container mi-page">
+    <h1 class="mi-page-title">我的订阅</h1>
 
     <% if (subs.length === 0) { %>
-    <div class="bg-white rounded-lg shadow p-10 text-center">
-      <p class="text-gray-500 mb-4">你还没有订阅</p>
-      <a href="/user/plans" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700">浏览套餐</a>
+    <div class="mi-card">
+      <div class="mi-empty">
+        <div class="mi-empty-icon">📦</div>
+        <p class="mi-empty-text">你还没有订阅</p>
+        <a href="/user/plans" class="mi-btn mi-btn-primary">浏览套餐</a>
+      </div>
     </div>
     <% } else { %>
-    <div class="space-y-4">
+    <div class="mi-grid mi-grid-2">
       <% subs.forEach(s => { %>
-      <a href="/user/sub/<%= s.token %>" class="block bg-white rounded-lg shadow p-5 hover:shadow-md transition">
-        <div class="flex justify-between items-start">
-          <div>
-            <h3 class="font-semibold text-lg"><%= s.plan_name || '套餐' %></h3>
-            <p class="text-sm text-gray-500 mt-1">Email: <%= s.email %></p>
+      <a href="/user/sub/<%= s.token %>" class="mi-card mi-card-interactive" style="text-decoration:none; color:inherit;">
+        <div class="mi-card-body">
+          <div class="mi-flex mi-justify-between mi-items-center mi-mb-2">
+            <h3 class="text-headline"><%= s.plan_name || '套餐' %></h3>
+            <span class="mi-badge <%= s.enabled ? 'mi-badge-success' : 'mi-badge-error' %>">
+              <%= s.enabled ? '有效' : '已禁用' %>
+            </span>
           </div>
-          <span class="px-3 py-1 text-sm rounded-full
-            <%= s.enabled ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' %>">
-            <%= s.enabled ? '有效' : '已禁用' %>
-          </span>
-        </div>
-        <div class="mt-3 grid grid-cols-3 gap-4 text-sm">
-          <div>
-            <span class="text-gray-500">流量:</span>
-            <% if (s.data_limit) { %>
-              <%= s.data_used %> / <%= s.data_limit %> GB
-            <% } else { %>
-              无限
-            <% } %>
-          </div>
-          <div>
-            <span class="text-gray-500">到期:</span> <%= s.expires_at %>
-          </div>
-          <div>
-            <span class="text-gray-500">创建:</span> <%= s.created_at %>
+          <div class="mi-text-sm mi-text-muted mi-mb-4">Email: <%= s.email %></div>
+          <div class="mi-info-grid">
+            <div class="mi-info-item">
+              <span class="mi-info-label">流量</span>
+              <span class="mi-info-value">
+                <% if (s.data_limit) { %><%= s.data_used %> / <%= s.data_limit %> GB<% } else { %>无限<% } %>
+              </span>
+            </div>
+            <div class="mi-info-item">
+              <span class="mi-info-label">到期</span>
+              <span class="mi-info-value"><%= s.expires_at %></span>
+            </div>
           </div>
         </div>
       </a>
@@ -52,9 +50,9 @@
     </div>
     <% } %>
 
-    <div class="flex gap-3 mt-6">
-      <a href="/user/plans" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">购买新套餐</a>
-      <a href="/user/redeem" class="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300">兑换码</a>
+    <div class="mi-flex mi-gap-3 mi-mt-6">
+      <a href="/user/plans" class="mi-btn mi-btn-primary">购买新套餐</a>
+      <a href="/user/redeem" class="mi-btn mi-btn-secondary">兑换码</a>
     </div>
   </div>
 </body>

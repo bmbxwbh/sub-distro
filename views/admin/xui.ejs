@@ -4,39 +4,36 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>3x-ui 配置 - sub-distro</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="/css/miuix.css">
 </head>
-<body class="bg-gray-50 min-h-screen">
+<body>
   <%- include('../partials/nav') %>
 
-  <div class="max-w-2xl mx-auto px-4 py-8">
-    <h1 class="text-2xl font-bold mb-6">3x-ui 面板配置</h1>
+  <div class="mi-container mi-container-md mi-page">
+    <h1 class="mi-page-title">3x-ui 面板配置</h1>
 
-    <form method="POST" class="bg-white p-6 rounded-lg shadow space-y-4">
-      <div>
-        <label class="block text-sm font-medium text-gray-700 mb-1">面板地址</label>
+    <form method="POST" class="mi-form-card">
+      <div class="mi-input-group">
+        <label class="mi-label">面板地址</label>
         <input type="url" name="base_url" value="<%= config ? config.base_url : '' %>"
-          placeholder="http://your-panel:2053" required
-          class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+          placeholder="http://your-panel:2053" required class="mi-input">
       </div>
-      <div>
-        <label class="block text-sm font-medium text-gray-700 mb-1">用户名</label>
-        <input type="text" name="username" value="<%= config ? config.username : '' %>" required
-          class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+      <div class="mi-input-group">
+        <label class="mi-label">用户名</label>
+        <input type="text" name="username" value="<%= config ? config.username : '' %>" required class="mi-input">
       </div>
-      <div>
-        <label class="block text-sm font-medium text-gray-700 mb-1">密码</label>
-        <input type="password" name="password" value="<%= config ? config.password : '' %>" required
-          class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+      <div class="mi-input-group">
+        <label class="mi-label">密码</label>
+        <input type="password" name="password" value="<%= config ? config.password : '' %>" required class="mi-input">
       </div>
-      <div class="flex gap-3">
-        <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700">保存</button>
-        <button type="button" onclick="testConnection()" class="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700">测试连接</button>
+      <div class="mi-form-footer">
+        <button type="submit" class="mi-btn mi-btn-primary">保存</button>
+        <button type="button" onclick="testConnection()" class="mi-btn mi-btn-ghost">测试连接</button>
       </div>
     </form>
 
-    <div id="testResult" class="mt-4 hidden">
-      <div class="p-3 rounded-lg text-sm"></div>
+    <div id="testResult" class="mi-mt-4 mi-hidden">
+      <div class="mi-flash-inner"></div>
     </div>
   </div>
 
@@ -45,9 +42,10 @@
       const res = await fetch('/admin/xui/test', { method: 'POST' });
       const data = await res.json();
       const el = document.getElementById('testResult');
-      el.classList.remove('hidden');
-      el.querySelector('div').className = `p-3 rounded-lg text-sm ${data.success ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`;
-      el.querySelector('div').textContent = data.message;
+      el.classList.remove('mi-hidden');
+      const inner = el.querySelector('div');
+      inner.className = 'mi-flash-inner ' + (data.success ? 'mi-flash-success' : 'mi-flash-error');
+      inner.textContent = data.message;
     }
   </script>
 </body>

@@ -4,21 +4,20 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>兑换码 - sub-distro</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="/css/miuix.css">
 </head>
-<body class="bg-gray-50 min-h-screen">
+<body>
   <%- include('../partials/nav') %>
 
-  <div class="max-w-md mx-auto mt-20 px-4">
-    <h1 class="text-2xl font-bold mb-6 text-center">兑换码</h1>
-    <form method="POST" class="bg-white p-6 rounded-lg shadow space-y-4">
-      <div>
-        <label class="block text-sm font-medium text-gray-700 mb-1">输入兑换码</label>
+  <div class="mi-container mi-container-sm mi-page" style="padding-top: 64px;">
+    <h1 class="mi-page-title mi-text-center">兑换码</h1>
+    <form method="POST" class="mi-form-card">
+      <div class="mi-input-group">
+        <label class="mi-label">输入兑换码</label>
         <input type="text" name="code" required placeholder="XXXX-XXXX-XXXX"
-          class="w-full border rounded-lg px-3 py-2 text-center text-lg font-mono tracking-wider
-          focus:ring-2 focus:ring-blue-500 focus:outline-none">
+          class="mi-input mi-text-center" style="font-family: 'SF Mono', 'Fira Code', monospace; letter-spacing: 2px; font-size: 18px;">
       </div>
-      <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition">兑换</button>
+      <button type="submit" class="mi-btn mi-btn-primary mi-btn-block mi-mt-2">兑换</button>
     </form>
   </div>
 </body>

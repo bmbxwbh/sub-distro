@@ -4,45 +4,44 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>订阅管理 - sub-distro</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="/css/miuix.css">
 </head>
-<body class="bg-gray-50 min-h-screen">
+<body>
   <%- include('../partials/nav') %>
 
-  <div class="max-w-6xl mx-auto px-4 py-8">
-    <h1 class="text-2xl font-bold mb-6">订阅管理</h1>
+  <div class="mi-container mi-page">
+    <h1 class="mi-page-title">订阅管理</h1>
 
-    <div class="bg-white rounded-lg shadow overflow-x-auto">
-      <table class="w-full">
-        <thead class="bg-gray-50">
+    <div class="mi-table-wrapper">
+      <table class="mi-table">
+        <thead>
           <tr>
-            <th class="px-4 py-3 text-left text-sm font-medium text-gray-500">ID</th>
-            <th class="px-4 py-3 text-left text-sm font-medium text-gray-500">用户</th>
-            <th class="px-4 py-3 text-left text-sm font-medium text-gray-500">套餐</th>
-            <th class="px-4 py-3 text-left text-sm font-medium text-gray-500">Email</th>
-            <th class="px-4 py-3 text-left text-sm font-medium text-gray-500">流量</th>
-            <th class="px-4 py-3 text-left text-sm font-medium text-gray-500">到期时间</th>
-            <th class="px-4 py-3 text-left text-sm font-medium text-gray-500">状态</th>
+            <th>ID</th>
+            <th>用户</th>
+            <th>套餐</th>
+            <th>Email</th>
+            <th>流量</th>
+            <th>到期时间</th>
+            <th>状态</th>
           </tr>
         </thead>
-        <tbody class="divide-y">
+        <tbody>
           <% rows.forEach(s => { %>
-          <tr class="hover:bg-gray-50">
-            <td class="px-4 py-3"><%= s.id %></td>
-            <td class="px-4 py-3"><%= s.username %></td>
-            <td class="px-4 py-3"><%= s.plan_name || '-' %></td>
-            <td class="px-4 py-3 text-sm font-mono"><%= s.email %></td>
-            <td class="px-4 py-3">
+          <tr>
+            <td><%= s.id %></td>
+            <td><%= s.username %></td>
+            <td><%= s.plan_name || '-' %></td>
+            <td class="mono"><%= s.email %></td>
+            <td>
               <% if (s.data_limit) { %>
                 <%= s.data_used %> / <%= s.data_limit %> GB
               <% } else { %>
                 无限
               <% } %>
             </td>
-            <td class="px-4 py-3 text-sm"><%= s.expires_at %></td>
-            <td class="px-4 py-3">
-              <span class="px-2 py-1 text-xs rounded-full
-                <%= s.enabled ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' %>">
+            <td class="mi-text-sm"><%= s.expires_at %></td>
+            <td>
+              <span class="mi-badge <%= s.enabled ? 'mi-badge-success' : 'mi-badge-error' %>">
                 <%= s.enabled ? '有效' : '禁用' %>
               </span>
             </td>
@@ -53,12 +52,9 @@
     </div>
 
     <% if (pages > 1) { %>
-    <div class="flex justify-center gap-2 mt-6">
+    <div class="mi-pagination">
       <% for (let i = 1; i <= pages; i++) { %>
-      <a href="?page=<%= i %>"
-        class="px-3 py-1 rounded <%= i === page ? 'bg-blue-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-100' %>">
-        <%= i %>
-      </a>
+      <a href="?page=<%= i %>" class="mi-page-btn <%= i === page ? 'mi-page-btn-active' : '' %>"><%= i %></a>
       <% } %>
     </div>
     <% } %>
